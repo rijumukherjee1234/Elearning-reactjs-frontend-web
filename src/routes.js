@@ -38,6 +38,7 @@ Coded by www.creative-tim.com
 // E learning layouts
 import Dashboard from "layouts/dashboard";
 import Masterdata from "layouts/masterdata/masterdata";
+import Addcourse from "layouts/courseDetailes/addCourseDetailes";
 import Billing from "layouts/billing";
 import RTL from "layouts/rtl";
 import Notifications from "layouts/notifications";
@@ -68,6 +69,14 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/masterdata",
     component: <Masterdata />,
+  },
+  {
+    type: "collapse",
+    name: "Add Course",
+    key: "addCourse",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/addCourse",
+    component: <Addcourse />,
   },
   // {
   //   type: "collapse",

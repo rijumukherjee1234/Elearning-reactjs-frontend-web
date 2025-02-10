@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from "./endpoints"; // Ensure correct import
 
 // Create Axios instance
 const api = axios.create({
-  baseURL: "http://localhost:3003", // Use your API base URL
+  baseURL: "https://ecom-db-laravel.onrender.com", // Use your API base URL
 });
 
 // Add request interceptor to include Bearer Token
