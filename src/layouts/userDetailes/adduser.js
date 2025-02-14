@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import {
   TextField,
@@ -41,16 +42,22 @@ const AddCourse = () => {
     <DashboardLayout>
       <MDBox pt={6} pb={3}>
         <Card sx={{ padding: 2 }}>
-          <CardContent>
-            <Typography variant="p" gutterBottom textAlign="center" fontWeight="bold">
-              Add Course
+        <Typography
+              variant="p"
+              gutterBottom
+              textAlign="center"
+              fontWeight="bold"
+             
+            >
+              Add User
             </Typography>
-
+          <CardContent>
+          
             <Grid container spacing={3}>
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Course Category"
+                  label="First Name"
                   name="role"
                   value={courseData.role}
                   onChange={handleChange}
@@ -59,7 +66,7 @@ const AddCourse = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Course SubCategory"
+                  label="Last Name"
                   name="name"
                   value={courseData.name}
                   onChange={handleChange}
@@ -69,7 +76,7 @@ const AddCourse = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Course Name"
+                  label="Email Id"
                   name="initials"
                   value={courseData.initials}
                   onChange={handleChange}
@@ -78,7 +85,7 @@ const AddCourse = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Course Type"
+                  label="Contact Number"
                   name="email"
                   value={courseData.email}
                   onChange={handleChange}
@@ -88,7 +95,7 @@ const AddCourse = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Course Price"
+                  label="User Name"
                   name="mobile"
                   value={courseData.mobile}
                   onChange={handleChange}
@@ -97,8 +104,9 @@ const AddCourse = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Course Description"
+                  label="Password"
                   name="gender"
+                  type="password"
                   value={courseData.gender}
                   onChange={handleChange}
                 />
@@ -107,19 +115,9 @@ const AddCourse = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   fullWidth
-                  label="Password"
+                  label="System Role Name"
                   name="password"
-                  type="password"
                   value={courseData.password}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  fullWidth
-                  label="Username"
-                  name="username"
-                  value={courseData.username}
                   onChange={handleChange}
                 />
               </Grid>

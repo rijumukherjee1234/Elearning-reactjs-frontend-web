@@ -12,10 +12,44 @@ export const courseAdd = async (courseseAdd) => {
     throw error;
   }
 };
+export const systemRoleAdd = async (courseseAdd) => {
+  try {
+    const response = await apicall.post(API_ENDPOINTS.add_systemrole, courseseAdd);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const courseUpdate = async (courseseAdd) => {
+  try {
+    const response = await apicall.post(API_ENDPOINTS.add_category, courseseAdd);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const systemRoleUpdate = async (courseseAdd) => {
+  try {
+    const response = await apicall.post(API_ENDPOINTS.add_systemrole, courseseAdd);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 //get
 export const fetchCourses = async (payload) => {
   try {
     const response = await apicall.get(API_ENDPOINTS.get_category, {
+      params: payload, // 👈 Sending payload as query params
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const systemRole = async (payload) => {
+  try {
+    const response = await apicall.get(API_ENDPOINTS.get_systemrole, {
       params: payload, // 👈 Sending payload as query params
     });
     return response.data;

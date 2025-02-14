@@ -36,7 +36,7 @@ import DataTable from "examples/Tables/DataTable";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-import { courseAdd, fetchCourses } from '../../services/masterdataapicall';
+import { courseAdd, fetchCourses,systemRole,systemRoleAdd,courseUpdate,systemRoleUpdate } from '../../services/masterdataapicall';
 
 function Masterdata() {
   const MySwal = withReactContent(Swal);
@@ -44,15 +44,25 @@ function Masterdata() {
   const [selectedMaster, setSelectedMaster] = useState("1");
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [columns, setcolumns] = useState([]);
   const [formData, setFormData] = useState({ id: "", name: "", status: "" });
 
   // Fetch data from API on load
 
 
-  const fetchData = async () => {
+  const fetchData = async (data) => {
+    console.log(data);
+    
     try {
+      let response;
       const payload = { ITEM: "VIEW_ALL" };
-      const response = await fetchCourses(payload);
+      if(data=="Course Category"){
+         response = await fetchCourses(payload);
+      }else if(data=="System Role"){
+         response = await systemRole(payload);
+      }
+     
+     
       if (response.status === "True") {
         setData(response.response);
       }
@@ -61,9 +71,24 @@ function Masterdata() {
     }
   };
 
+
   // Add new entry
   const handleAdd = () => {
     setFormData({ id: "", name: "", status: "Pending" });
+    setOpen(true);
+  };
+  const handleEdit = (data) => {
+    console.log(data);
+    if(data.SYSTEM_ROLE_SYS_ID){
+      setFormData({ id:data.SYSTEM_ROLE_SYS_ID, name: data.SYSTEM_ROLE_NAME });
+      
+    }else if(data.COURSE_CATEGORY_NAME){
+      setFormData({ id:data.COURSE_CATEGORY_SYS_ID, name: data.COURSE_CATEGORY_NAME });
+      
+    }else{
+      setFormData({})
+    }
+   
     setOpen(true);
   };
 
@@ -71,31 +96,69 @@ function Masterdata() {
   const handleSave = async () => {
     try {
       if (formData.id) {
-        // Handle update logic here
+        console.log(formData);
+        
+        let response 
+        if (selectedMaster === "Course Category") {
+          const newEntry = { COURSE_CATEGORY_NAME: formData.name,COURSE_CATEGORY_SYS_ID:formData.id };
+           response = await courseUpdate(newEntry);
+           fetchData(selectedMaster)
+        
+        }else if(selectedMaster === "System Role"){
+          const newEntry = { SYSTEM_ROLE_NAME: formData.name,SYSTEM_ROLE_SYS_ID:formData.id };
+           response = await systemRoleUpdate(newEntry);
+           fetchData(selectedMaster)
+        }
+        if (response.status === "True") {
+          MySwal.fire({
+            title: "Success!",
+            text: response.message,
+            icon: "success",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+
+          // Add new row to the table
+          setData([...data, { name: formData.name, status: formData.status }]);
+        } else {
+          MySwal.fire({
+            title: "Error!",
+            text: response.message,
+            icon: "error",
+            confirmButtonText: "Retry",
+          });
+        }
+      
       } else {
+        let response 
         if (selectedMaster === "Course Category") {
           const newEntry = { COURSE_CATEGORY_NAME: formData.name };
-          const response = await courseAdd(newEntry);
+           response = await courseAdd(newEntry);
+           fetchData(selectedMaster)
+        
+        }else if(selectedMaster === "System Role"){
+          const newEntry = { SYSTEM_ROLE_NAME: formData.name };
+           response = await systemRoleAdd(newEntry);
+           fetchData(selectedMaster)
+        }
+        if (response.status === "True") {
+          MySwal.fire({
+            title: "Success!",
+            text: response.message,
+            icon: "success",
+            showConfirmButton: false,
+            timer: 2000,
+          });
 
-          if (response.status === "True") {
-            MySwal.fire({
-              title: "Success!",
-              text: response.message,
-              icon: "success",
-              showConfirmButton: false,
-              timer: 2000,
-            });
-
-            // Add new row to the table
-            setData([...data, { name: formData.name, status: formData.status }]);
-          } else {
-            MySwal.fire({
-              title: "Error!",
-              text: response.message,
-              icon: "error",
-              confirmButtonText: "Retry",
-            });
-          }
+          // Add new row to the table
+          setData([...data, { name: formData.name, status: formData.status }]);
+        } else {
+          MySwal.fire({
+            title: "Error!",
+            text: response.message,
+            icon: "error",
+            confirmButtonText: "Retry",
+          });
         }
       }
       setOpen(false);
@@ -105,10 +168,7 @@ function Masterdata() {
   };
 
   // Table columns (Added "Status" column)
-  const columns = [
-    { Header: "Name", accessor: "name", align: "left" },
-    { Header: "CourseCategory", accessor: "CourseCategory", align: "left" }, // New Status Column
-  ];
+ 
 
   // Table rows (Added Status)
   const rows = data.map((item, index) => ({
@@ -118,18 +178,43 @@ function Masterdata() {
       </MDTypography>
     ),
    CourseCategory: (
-      <MDTypography variant="caption" color="text" fontWeight="medium">
+      <MDTypography variant="caption" color="text" fontWeight="medium" onClick={() => handleEdit(item)}>
         {item.COURSE_CATEGORY_NAME}
       </MDTypography>
     ),
+    System_Role: (
+      <MDTypography variant="caption" color="text" fontWeight="medium" onClick={() => handleEdit(item)}>
+      {item.SYSTEM_ROLE_NAME}
+    </MDTypography>
+    )
   }));
-  
+  //column name change and api calling change
   const handleMasterChange = (e) => {
     const selectedValue = e.target.value;
     setSelectedMaster(selectedValue);
     if(selectedValue == "Course Category"){
-      fetchData();
-    }else{
+      fetchData(selectedValue);
+      setcolumns([
+        { Header: "Name", accessor: "name", align: "left" },
+        { Header: "CourseCategory", accessor: "CourseCategory", align: "left" },
+      ]);
+    }
+    else if(selectedValue == "Course SubCategory"){
+      setcolumns([
+        { Header: "Name", accessor: "name", align: "left" },
+        { Header: "CourseCategory", accessor: "CourseCategory", align: "left" },
+        { Header: "CourseSubCategory", accessor: "CourseSubCategory", align: "left" },
+      ]);
+    } else if(selectedValue == "System Role"){
+      fetchData(selectedValue);
+      setcolumns([
+        { Header: "Name", accessor: "name", align: "left" },
+        { Header: "System Role", accessor: "System_Role", align: "left" },
+     
+      ]);
+    }
+    else{
+      setcolumns([]);
         setData([]) 
     }
     // Additional functionality
@@ -156,7 +241,7 @@ function Masterdata() {
               >
                 <MenuItem value="1">Select</MenuItem>
                 <MenuItem value="Course Category">Course Category</MenuItem>
-                <MenuItem value="Course SubCategory">Course SubCategory</MenuItem>
+               
                 <MenuItem value="System Role">System Role</MenuItem>
               </Select>
             </Grid>
@@ -173,10 +258,11 @@ function Masterdata() {
 
       {/* Data Table */}
       {selectedMaster !== "1" && (
-      <MDBox pt={3}>
+      <MDBox pt={3}   >
         <DataTable
           table={{ columns, rows }}
           isSorted={false}
+        
           entriesPerPage={false}
           showTotalEntries={false}
           noEndBorder

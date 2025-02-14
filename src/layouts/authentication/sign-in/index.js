@@ -8,7 +8,7 @@ import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
-
+import { useNavigate } from "react-router-dom";
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -30,6 +30,7 @@ import withReactContent from "sweetalert2-react-content";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 function Basic() {
+  const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
   const MySwal = withReactContent(Swal);
 
@@ -73,7 +74,7 @@ function Basic() {
           localStorage.setItem("authToken", response.token);
 
           // Redirect user after login (Modify as needed)
-          window.location.href = "/dashboard";
+          navigate("/dashboard");
           MySwal.fire({
             title: "Welcome Back!",
             text: "Login Successful. Redirecting...",
